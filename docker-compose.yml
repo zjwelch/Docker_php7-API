@@ -1,0 +1,34 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/wwww/html
+    links:
+      - 'mysqldb'
+
+  mysqldb:
+   image: mysql:latest
+   volumes:
+     - mysqldata:/var/lib/mysql #no:space string, space: array
+   command: mysqld --default-authentication-plugin=mysql_native_password
+   restart: always
+   environment:
+     TZ: "America/New_York"
+     MYSQL_ROOT_PASSWORD: "toor"
+     MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+     MYSQL_DATABASE: 'testdb'
+#   ports:
+#    - "3306:3306"
+
+  adminer:
+   image: adminer:latest
+   restart: always
+   ports:
+     - "8080:8080"
+
+volumes:
+  mysqldata:
+    driver: local
